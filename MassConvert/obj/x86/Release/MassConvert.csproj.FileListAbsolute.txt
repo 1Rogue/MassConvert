@@ -1,0 +1,5 @@
+C:\Users\Spencer\documents\visual studio 2010\Projects\MassConvert\MassConvert\bin\Release\MassConvert.exe
+C:\Users\Spencer\documents\visual studio 2010\Projects\MassConvert\MassConvert\bin\Release\MassConvert.pdb
+C:\Users\Spencer\documents\visual studio 2010\Projects\MassConvert\MassConvert\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Spencer\documents\visual studio 2010\Projects\MassConvert\MassConvert\obj\x86\Release\MassConvert.exe
+C:\Users\Spencer\documents\visual studio 2010\Projects\MassConvert\MassConvert\obj\x86\Release\MassConvert.pdb
