@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Project1
 {
-    class Class1
+    class Converter
     {
 
         static string ProgramVersion = "1.0.1";
