@@ -10,17 +10,18 @@ namespace Project1
     class Class1
     {
 
-        static string ProgramVersion = "1.0.0";
-
+        static string ProgramVersion = "1.0.1";
+        static string fileType = "";
 
         static void Main()
         {
             string[] args = Environment.GetCommandLineArgs();
             string dir = Directory.GetCurrentDirectory();
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string[] files = Directory.GetFiles(@dir, "*.blp");
-            int factor = 50;
+            string[] files;
+            int factor = 40;
             StartUp();
+            files = Directory.GetFiles(@dir, "*." + fileType);
             if (files.Length != 0)
             {
                 Console.WriteLine(string.Concat("There are ", (int)files.Length, " files in this directory"));
@@ -31,17 +32,15 @@ namespace Project1
                         builder.Append(string.Concat(files.GetValue(i), " "));
                     }
                     builder.Append(files.GetValue(w * factor + factor - 1));
-                    var process = new Process
-                    {
-                        StartInfo = new ProcessStartInfo
-                        {
-                            FileName = "%APPDATA%/MassConverter/BLPConverter.exe " + builder.ToString()
-                        }
-                    };
-                    process.Start();
-                    process.WaitForExit();
+                    Run(builder.ToString());
                     builder.Clear();
                 }
+                for (int i=(files.Length-(files.Length % factor)); i < files.Length - 1; i++) {
+                    builder.Append(files.GetValue(i) + " ");
+                }
+                builder.Append(files.GetValue(files.Length - 1));
+                Run(builder.ToString());
+                builder.Clear();
             }
             else
             {
@@ -59,15 +58,17 @@ namespace Project1
                 Console.WriteLine("You can download at http://bit.ly/YhE3sR");
                 Exit(0);
             }
-            if (!Directory.Exists("%APPDATA%/MassConverter"))
+            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassConverter"))
             {
-                Directory.CreateDirectory("%APPDATA%/MassConverter");
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassConverter");
             }
-            if (!File.Exists("%APPDATA%/MassConverter/BLPConverter.exe"))
+            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassConverter\\BLPConverter.exe"))
             {
                 Console.WriteLine("No Converter File supplied. Downloading a new converter.");
                 GetNewConverter();
             }
+            Console.WriteLine("Please input what files you are converting from");
+            GetFileType();
         }
 
         static String GetCurrentVersion()
@@ -81,7 +82,7 @@ namespace Project1
         static void GetNewConverter()
         {
             System.Net.WebClient client = new System.Net.WebClient();
-            client.DownloadFile("https://github.com/1Rogue/MassConvert/blob/master/Resources/BLPConverter.exe?raw=true", @"%APPDATA%/MassConverter/BLPConverter.exe");
+            client.DownloadFile("https://github.com/1Rogue/MassConvert/blob/master/Resources/BLPConverter.exe?raw=true", @Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassConverter\\BLPConverter.exe");
             Console.WriteLine("Converter Downloaded.");
         }
 
@@ -90,6 +91,38 @@ namespace Project1
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey(true);
             Environment.Exit(code);
+        }
+
+        static void Run(string fileargs)
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\MassConverter\\BLPConverter.exe",
+                    Arguments = "-e -m " + fileargs
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+        }
+
+        static void GetFileType()
+        {
+            string input = Console.ReadLine();
+            switch (input.ToLower()) {
+                case "png":
+                    fileType = "png";
+                    break;
+                case "blp":
+                    fileType = "blp";
+                    break;
+                default:
+                    Console.WriteLine("Invalid input, Please type it again.");
+                    Console.WriteLine("Previous input: " + input);
+                    GetFileType();
+                    break;
+            }
         }
     }
 }
